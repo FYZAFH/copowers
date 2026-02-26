@@ -1,6 +1,6 @@
 # Copowers
 
-基于 [Superpowers](https://github.com/obra/superpowers) 的开发工作流插件，集成 [mcp-codex-dev](https://github.com/FYZAFH/mcp-codex-dev) 作为执行引擎。
+基于 [Superpowers](https://github.com/obra/superpowers) 的开发工作流Skill集合，集成 [mcp-codex-dev](https://github.com/FYZAFH/mcp-codex-dev) 进行实际执行。
 
 Superpowers 通过 composable skills 定义了一套完整的软件开发流程（头脑风暴 → 设计 → 计划 → 实现 → 审查 → 完成）。Copowers 在此基础上做了一个关键改动：**将 TDD 实现和代码审查完全委托给 mcp-codex-dev**，不再依赖子代理分派模式。
 
@@ -31,7 +31,7 @@ brainstorming → writing-plans → using-git-worktrees
 ### 前置条件
 
 - Node.js（用于运行 mcp-codex-dev）
-- [Codex CLI](https://github.com/openai/codex)（mcp-codex-dev 的底层引擎）
+- [Codex CLI](https://github.com/openai/codex)
 
 ### 作为插件安装
 
@@ -42,8 +42,6 @@ brainstorming → writing-plans → using-git-worktrees
 # 安装
 /plugin install copowers@copowers
 ```
-
-安装后 mcp-codex-dev MCP 服务自动注册（通过 `.mcp.json`），所有 skills 自动加载。
 
 ### 本地开发
 
@@ -78,7 +76,6 @@ claude --plugin-dir /path/to/copowers
 ## 致谢
 
 - [Superpowers](https://github.com/obra/superpowers) by Jesse Vincent — 本项目的基础框架和 skill 体系
-- [mcp-codex-dev](https://github.com/FYZAFH/mcp-codex-dev) — MCP 服务器，封装 Codex CLI 提供 TDD 和 code review 工具
 
 ## License
 
