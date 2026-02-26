@@ -26,9 +26,10 @@ Load plan, review critically, execute tasks in batches, report for review betwee
 
 For each task:
 1. Mark as in_progress
-2. Follow each step exactly (plan has bite-sized steps)
-3. Run verifications as specified
-4. Mark as completed
+2. Call `mcp__mcp-codex-dev__tdd` with task instruction, planReference, taskContext
+3. Call `mcp__mcp-codex-dev__review` on the result (reviewType: "full")
+4. Fix any issues (resume tdd session if needed)
+5. Mark as completed
 
 ### Step 3: Report
 When batch complete:
@@ -79,6 +80,7 @@ After all tasks complete and verified:
 ## Integration
 
 **Required workflow skills:**
+- **superpowers:using-codex-dev** - REQUIRED: mcp-codex-dev tool reference
 - **superpowers:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
 - **superpowers:writing-plans** - Creates the plan this skill executes
 - **superpowers:finishing-a-development-branch** - Complete development after all tasks

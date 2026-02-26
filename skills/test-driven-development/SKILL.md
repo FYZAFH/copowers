@@ -13,6 +13,24 @@ Write the test first. Watch it fail. Write minimal code to pass.
 
 **Violating the letter of the rules is violating the spirit of the rules.**
 
+## Automated TDD Execution
+
+When executing tasks within codex-driven-development, use the mcp-codex-dev
+tdd tool which enforces RED-GREEN-REFACTOR internally via Codex CLI.
+
+The tdd tool injects TDD methodology, ensuring:
+- Tests written before production code
+- Each test verified to fail first
+- Minimal code to pass
+- Refactoring after green
+
+**REQUIRED BACKGROUND:** superpowers:using-codex-dev for tool parameters
+
+The principles in this skill still apply when:
+- Manually implementing (not using tdd tool)
+- Reviewing whether TDD was followed correctly
+- Evaluating code written by others
+
 ## When to Use
 
 **Always:**

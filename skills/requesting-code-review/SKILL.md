@@ -5,14 +5,14 @@ description: Use when completing tasks, implementing major features, or before m
 
 # Requesting Code Review
 
-Dispatch superpowers:code-reviewer subagent to catch issues before they cascade.
+Call mcp-codex-dev review tool to catch issues before they cascade.
 
 **Core principle:** Review early, review often.
 
 ## When to Request Review
 
 **Mandatory:**
-- After each task in subagent-driven development
+- After each task in codex-driven-development
 - After completing major feature
 - Before merge to main
 
@@ -23,22 +23,27 @@ Dispatch superpowers:code-reviewer subagent to catch issues before they cascade.
 
 ## How to Request
 
-**1. Get git SHAs:**
+**1. Get baseSha:**
 ```bash
-BASE_SHA=$(git rev-parse HEAD~1)  # or origin/main
-HEAD_SHA=$(git rev-parse HEAD)
+BASE_SHA=$(git rev-parse HEAD~1)  # or origin/main, or recorded taskBaseSha
 ```
 
-**2. Dispatch code-reviewer subagent:**
+**2. Call review tool:**
 
-Use Task tool with superpowers:code-reviewer type, fill template at `code-reviewer.md`
+```
+mcp__mcp-codex-dev__review
+  instruction: task/feature description (what should have been built)
+  whatWasImplemented: brief summary of what was actually built
+  baseSha: starting commit
+  reviewType: "full"  (or "spec" / "quality" for targeted review)
+  planReference: plan file path (if available)
+  taskContext: "Task N of M: [name]" (if within a plan)
+```
 
-**Placeholders:**
-- `{WHAT_WAS_IMPLEMENTED}` - What you just built
-- `{PLAN_OR_REQUIREMENTS}` - What it should do
-- `{BASE_SHA}` - Starting commit
-- `{HEAD_SHA}` - Ending commit
-- `{DESCRIPTION}` - Brief summary
+**Review types:**
+- `full` (default) — spec compliance + code quality in one pass
+- `spec` — only checks: did implementation match requirements?
+- `quality` — only checks: is code well-built, tested, maintainable?
 
 **3. Act on feedback:**
 - Fix Critical issues immediately
@@ -53,33 +58,36 @@ Use Task tool with superpowers:code-reviewer type, fill template at `code-review
 
 You: Let me request code review before proceeding.
 
-BASE_SHA=$(git log --oneline | grep "Task 1" | head -1 | awk '{print $1}')
+BASE_SHA=$(git rev-parse HEAD~3)  # commit before Task 2
 HEAD_SHA=$(git rev-parse HEAD)
 
-[Dispatch superpowers:code-reviewer subagent]
-  WHAT_WAS_IMPLEMENTED: Verification and repair functions for conversation index
-  PLAN_OR_REQUIREMENTS: Task 2 from docs/plans/deployment-plan.md
-  BASE_SHA: a7981ec
-  HEAD_SHA: 3df7661
-  DESCRIPTION: Added verifyIndex() and repairIndex() with 4 issue types
+[Call mcp__mcp-codex-dev__review]
+  instruction: "Task 2: Verification and repair functions for conversation index, support 4 issue types"
+  whatWasImplemented: "Added verifyIndex() and repairIndex() with 4 issue types, 8 tests passing"
+  baseSha: a7981ec
+  reviewType: "full"
+  planReference: "docs/plans/deployment-plan.md"
+  taskContext: "Task 2 of 5: Verification function"
 
-[Subagent returns]:
-  Strengths: Clean architecture, real tests
-  Issues:
-    Important: Missing progress indicators
-    Minor: Magic number (100) for reporting interval
-  Assessment: Ready to proceed
+[Review returns]:
+  Spec: Compliant
+  Quality:
+    Strengths: Clean architecture, real tests
+    Issues:
+      Important: Missing progress indicators
+      Minor: Magic number (100) for reporting interval
+    Assessment: Ready with fixes
 
-You: [Fix progress indicators]
-[Continue to Task 3]
+You: [Fix progress indicators, extract constant]
+[Re-review or continue to Task 3]
 ```
 
 ## Integration with Workflows
 
-**Subagent-Driven Development:**
-- Review after EACH task
-- Catch issues before they compound
-- Fix before moving to next task
+**Codex-Driven Development:**
+- Review after EACH task (automatic in workflow)
+- Review fix loop: fix → re-review until approved
+- Final full-range review after all tasks
 
 **Executing Plans:**
 - Review after each batch (3 tasks)
@@ -88,6 +96,8 @@ You: [Fix progress indicators]
 **Ad-Hoc Development:**
 - Review before merge
 - Review when stuck
+
+**REQUIRED BACKGROUND:** superpowers:using-codex-dev for tool parameters
 
 ## Red Flags
 
@@ -101,5 +111,3 @@ You: [Fix progress indicators]
 - Push back with technical reasoning
 - Show code/tests that prove it works
 - Request clarification
-
-See template at: requesting-code-review/code-reviewer.md

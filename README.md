@@ -1,157 +1,85 @@
-# Superpowers
+# Copowers
 
-Superpowers is a complete software development workflow for your coding agents, built on top of a set of composable "skills" and some initial instructions that make sure your agent uses them.
+基于 [Superpowers](https://github.com/obra/superpowers) 的开发工作流插件，集成 [mcp-codex-dev](https://github.com/FYZAFH/mcp-codex-dev) 作为执行引擎。
 
-## How it works
+Superpowers 通过 composable skills 定义了一套完整的软件开发流程（头脑风暴 → 设计 → 计划 → 实现 → 审查 → 完成）。Copowers 在此基础上做了一个关键改动：**将 TDD 实现和代码审查完全委托给 mcp-codex-dev**，不再依赖子代理分派模式。
 
-It starts from the moment you fire up your coding agent. As soon as it sees that you're building something, it *doesn't* just jump into trying to write code. Instead, it steps back and asks you what you're really trying to do. 
+## 与 Superpowers 的区别
 
-Once it's teased a spec out of the conversation, it shows it to you in chunks short enough to actually read and digest. 
+| | Superpowers | Copowers |
+|---|---|---|
+| 实现方式 | 分派 subagent 执行每个任务 | 调用 mcp-codex-dev `tdd` 工具 |
+| 代码审查 | 分派 reviewer subagent（两阶段） | 调用 mcp-codex-dev `review` 工具（一次性 spec + quality） |
+| 会话管理 | 每个 subagent 独立上下文 | Codex CLI session 支持 resume |
+| 修复循环 | 重新分派 subagent | resume 同一 session 修复 |
+| 并行代理 | 支持（dispatching-parallel-agents） | 移除（避免文件冲突） |
 
-After you've signed off on the design, your agent puts together an implementation plan that's clear enough for an enthusiastic junior engineer with poor taste, no judgement, no project context, and an aversion to testing to follow. It emphasizes true red/green TDD, YAGNI (You Aren't Gonna Need It), and DRY. 
+## 工作流程
 
-Next up, once you say "go", it launches a *subagent-driven-development* process, having agents work through each engineering task, inspecting and reviewing their work, and continuing forward. It's not uncommon for Claude to be able to work autonomously for a couple hours at a time without deviating from the plan you put together.
+```
+brainstorming → writing-plans → using-git-worktrees
+  → codex-driven-development:
+      for each task:
+        1. tdd tool（实现 + 测试）
+        2. review tool（spec + quality 审查）
+        3. 有问题 → resume session 修复 → 重新审查
+  → finishing-a-development-branch
+```
 
-There's a bunch more to it, but that's the core of the system. And because the skills trigger automatically, you don't need to do anything special. Your coding agent just has Superpowers.
+## 安装
 
+### 前置条件
 
-## Sponsorship
+- Node.js（用于运行 mcp-codex-dev）
+- [Codex CLI](https://github.com/openai/codex)（mcp-codex-dev 的底层引擎）
 
-If Superpowers has helped you do stuff that makes money and you are so inclined, I'd greatly appreciate it if you'd consider [sponsoring my opensource work](https://github.com/sponsors/obra).
-
-Thanks! 
-
-- Jesse
-
-
-## Installation
-
-**Note:** Installation differs by platform. Claude Code or Cursor have built-in plugin marketplaces. Codex and OpenCode require manual setup.
-
-
-### Claude Code (via Plugin Marketplace)
-
-In Claude Code, register the marketplace first:
+### 作为插件安装
 
 ```bash
-/plugin marketplace add obra/superpowers-marketplace
+# 添加 marketplace
+/plugin marketplace add abzhaw/copowers
+
+# 安装
+/plugin install copowers@copowers
 ```
 
-Then install the plugin from this marketplace:
+安装后 mcp-codex-dev MCP 服务自动注册（通过 `.mcp.json`），所有 skills 自动加载。
+
+### 本地开发
 
 ```bash
-/plugin install superpowers@superpowers-marketplace
+claude --plugin-dir /path/to/copowers
 ```
 
-### Cursor (via Plugin Marketplace)
+## Skills 一览
 
-In Cursor Agent chat, install from marketplace:
+**开发流程**
+- **brainstorming** — 需求澄清与设计探索
+- **writing-plans** — 生成分步实现计划（每步 2-5 分钟）
+- **codex-driven-development** — 按计划逐任务执行 TDD + review
+- **executing-plans** — 分批执行，带人工检查点
+- **finishing-a-development-branch** — 验证测试、合并/PR/保留/丢弃
 
-```text
-/plugin-add superpowers
-```
+**质量保证**
+- **test-driven-development** — RED-GREEN-REFACTOR，铁律：没有失败的测试就没有生产代码
+- **requesting-code-review** — 通过 mcp-codex-dev review 工具审查
+- **receiving-code-review** — 如何响应审查反馈
+- **verification-before-completion** — 完成前验证
 
-### Codex
+**工具与调试**
+- **using-codex-dev** — mcp-codex-dev 工具参考（tdd / review / exec / session 管理）
+- **using-git-worktrees** — 隔离工作区
+- **systematic-debugging** — 四阶段根因分析
 
-Tell Codex:
+**元技能**
+- **writing-skills** — 如何创建新 skill
+- **using-superpowers** — skill 系统入门
 
-```
-Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.codex/INSTALL.md
-```
+## 致谢
 
-**Detailed docs:** [docs/README.codex.md](docs/README.codex.md)
-
-### OpenCode
-
-Tell OpenCode:
-
-```
-Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.opencode/INSTALL.md
-```
-
-**Detailed docs:** [docs/README.opencode.md](docs/README.opencode.md)
-
-### Verify Installation
-
-Start a new session in your chosen platform and ask for something that should trigger a skill (for example, "help me plan this feature" or "let's debug this issue"). The agent should automatically invoke the relevant superpowers skill.
-
-## The Basic Workflow
-
-1. **brainstorming** - Activates before writing code. Refines rough ideas through questions, explores alternatives, presents design in sections for validation. Saves design document.
-
-2. **using-git-worktrees** - Activates after design approval. Creates isolated workspace on new branch, runs project setup, verifies clean test baseline.
-
-3. **writing-plans** - Activates with approved design. Breaks work into bite-sized tasks (2-5 minutes each). Every task has exact file paths, complete code, verification steps.
-
-4. **subagent-driven-development** or **executing-plans** - Activates with plan. Dispatches fresh subagent per task with two-stage review (spec compliance, then code quality), or executes in batches with human checkpoints.
-
-5. **test-driven-development** - Activates during implementation. Enforces RED-GREEN-REFACTOR: write failing test, watch it fail, write minimal code, watch it pass, commit. Deletes code written before tests.
-
-6. **requesting-code-review** - Activates between tasks. Reviews against plan, reports issues by severity. Critical issues block progress.
-
-7. **finishing-a-development-branch** - Activates when tasks complete. Verifies tests, presents options (merge/PR/keep/discard), cleans up worktree.
-
-**The agent checks for relevant skills before any task.** Mandatory workflows, not suggestions.
-
-## What's Inside
-
-### Skills Library
-
-**Testing**
-- **test-driven-development** - RED-GREEN-REFACTOR cycle (includes testing anti-patterns reference)
-
-**Debugging**
-- **systematic-debugging** - 4-phase root cause process (includes root-cause-tracing, defense-in-depth, condition-based-waiting techniques)
-- **verification-before-completion** - Ensure it's actually fixed
-
-**Collaboration** 
-- **brainstorming** - Socratic design refinement
-- **writing-plans** - Detailed implementation plans
-- **executing-plans** - Batch execution with checkpoints
-- **dispatching-parallel-agents** - Concurrent subagent workflows
-- **requesting-code-review** - Pre-review checklist
-- **receiving-code-review** - Responding to feedback
-- **using-git-worktrees** - Parallel development branches
-- **finishing-a-development-branch** - Merge/PR decision workflow
-- **subagent-driven-development** - Fast iteration with two-stage review (spec compliance, then code quality)
-
-**Meta**
-- **writing-skills** - Create new skills following best practices (includes testing methodology)
-- **using-superpowers** - Introduction to the skills system
-
-## Philosophy
-
-- **Test-Driven Development** - Write tests first, always
-- **Systematic over ad-hoc** - Process over guessing
-- **Complexity reduction** - Simplicity as primary goal
-- **Evidence over claims** - Verify before declaring success
-
-Read more: [Superpowers for Claude Code](https://blog.fsck.com/2025/10/09/superpowers/)
-
-## Contributing
-
-Skills live directly in this repository. To contribute:
-
-1. Fork the repository
-2. Create a branch for your skill
-3. Follow the `writing-skills` skill for creating and testing new skills
-4. Submit a PR
-
-See `skills/writing-skills/SKILL.md` for the complete guide.
-
-## Updating
-
-Skills update automatically when you update the plugin:
-
-```bash
-/plugin update superpowers
-```
+- [Superpowers](https://github.com/obra/superpowers) by Jesse Vincent — 本项目的基础框架和 skill 体系
+- [mcp-codex-dev](https://github.com/FYZAFH/mcp-codex-dev) — MCP 服务器，封装 Codex CLI 提供 TDD 和 code review 工具
 
 ## License
 
-MIT License - see LICENSE file for details
-
-## Support
-
-- **Issues**: https://github.com/obra/superpowers/issues
-- **Marketplace**: https://github.com/obra/superpowers-marketplace
+MIT

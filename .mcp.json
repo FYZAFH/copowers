@@ -1,0 +1,6 @@
+{
+  "mcp-codex-dev": {
+    "command": "npx",
+    "args": ["-y", "mcp-codex-dev"]
+  }
+}
