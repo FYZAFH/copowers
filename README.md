@@ -2,7 +2,7 @@
 
 基于 [Superpowers](https://github.com/obra/superpowers) 的开发工作流Skill集合，集成 [mcp-codex-dev](https://github.com/FYZAFH/mcp-codex-dev) 进行实际执行。
 
-Superpowers 通过 composable skills 定义了一套完整的软件开发流程（头脑风暴 → 设计 → 计划 → 实现 → 审查 → 完成）。Copowers 在此基础上做了一个关键改动：**将 TDD 实现和代码审查完全委托给 mcp-codex-dev**，不再依赖子代理分派模式。
+Superpowers 通过 composable skills 定义了一套完整的软件开发流程（头脑风暴 → 设计 → 计划 → 实现 → 审查 → 完成）。Copowers 在此基础上做了一个改动：**将 TDD 实现和代码审查完全委托给 mcp-codex-dev**，不再依赖子代理分派模式。
 
 ## 与 Superpowers 的区别
 
