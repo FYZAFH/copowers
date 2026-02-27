@@ -1,6 +1,9 @@
 {
   "name": "copowers",
   "description": "AI development workflow with mcp-codex-dev",
+  "owner": {
+    "name": "FYZAFH"
+  },
   "plugins": [
     {
       "name": "copowers",
