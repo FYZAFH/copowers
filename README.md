@@ -37,16 +37,10 @@ brainstorming → writing-plans → using-git-worktrees
 
 ```bash
 # 添加 marketplace
-/plugin marketplace add abzhaw/copowers
+/plugin marketplace add FYZAFH/copowers
 
 # 安装
 /plugin install copowers@copowers
-```
-
-### 本地开发
-
-```bash
-claude --plugin-dir /path/to/copowers
 ```
 
 ## Skills 一览
