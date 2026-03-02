@@ -28,16 +28,16 @@ Example `.mcp.json` (in project root or `~/.claude/.mcp.json`):
 
 ## When to Use Each Tool
 
-| Situation | Tool |
-|-----------|------|
-| Implementing a task following TDD | `mcp__mcp-codex-dev__tdd` |
-| Reviewing code changes (spec + quality) | `mcp__mcp-codex-dev__review` |
-| Running a raw instruction (refactoring, config) | `mcp__mcp-codex-dev__exec` |
-| Checking environment readiness | `mcp__mcp-codex-dev__health` |
-| Listing active/completed sessions | `mcp__mcp-codex-dev__session_list` |
-| Cleaning up old sessions | `mcp__mcp-codex-dev__session_discard` |
+| Situation                                                 | Tool                                  |
+| --------------------------------------------------------- | ------------------------------------- |
+| Implementing a task following TDD                         | `mcp__mcp-codex-dev__tdd`             |
+| Reviewing code changes (spec + quality)                   | `mcp__mcp-codex-dev__review`          |
+| Running a raw instruction (config + communication issues) | `mcp__mcp-codex-dev__exec`            |
+| Checking environment readiness                            | `mcp__mcp-codex-dev__health`          |
+| Listing active/completed sessions                         | `mcp__mcp-codex-dev__session_list`    |
+| Cleaning up old sessions                                  | `mcp__mcp-codex-dev__session_discard` |
 
-**Default to `tdd` for implementation.** Only use `exec` when TDD structure doesn't apply (e.g., config changes, refactoring without behavior change).
+**Default to `tdd` for implementation.** Only use `exec` when TDD structure doesn't apply (e.g., config changes, get inspirational perspectives from other viewpoints).
 
 ## Tool Reference
 
@@ -74,11 +74,11 @@ Returns: `review` (text), `specSessionId`, `qualitySessionId` (in full mode)
 
 ### exec (Plain Execution)
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| instruction | Yes | Raw instruction for Codex CLI |
-| sessionId | No | Resume existing session |
-| workingDirectory | No | Working directory path |
+| Parameter        | Required | Description                   |
+| ---------------- | -------- | ----------------------------- |
+| instruction      | Yes      | Raw instruction for Codex CLI |
+| sessionId        | No       | Resume existing session       |
+| workingDirectory | No       | Working directory path        |
 
 ### session_list / session_discard / health
 
@@ -104,14 +104,14 @@ tdd (implement) → review (full)
        → Resume tdd session: sessionId + "Fix: [issues]"
        → Re-review (same baseSha)
        → Loop (max 3 attempts)
-       → 3 failures → Escalate to human
+       → 3 failures → Escalate to human or you decide whether to continue the fix
 ```
 
 ## Red Flags
 
 **Never:**
-- Skip review after tdd (every implementation needs review)
-- Use `exec` when `tdd` is appropriate (bypasses TDD discipline)
-- Ignore Critical or Important review issues
+- Skip review after tdd (every implementation needs review, include frontend implementation and fix the issues mentioned in the review)
+- Use `exec` in situations where `tdd` is possible (bypasses TDD discipline)
+- Ignore Critical review issues
 - Proceed past a failed review without fixing
 - Call `tdd` in parallel for tasks that touch the same files

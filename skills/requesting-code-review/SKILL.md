@@ -79,7 +79,8 @@ HEAD_SHA=$(git rev-parse HEAD)
     Assessment: Ready with fixes
 
 You: [Fix progress indicators, extract constant]
-[Re-review or continue to Task 3]
+
+[Re-review]
 ```
 
 ## Integration with Workflows
@@ -88,10 +89,6 @@ You: [Fix progress indicators, extract constant]
 - Review after EACH task (automatic in workflow)
 - Review fix loop: fix → re-review until approved
 - Final full-range review after all tasks
-
-**Executing Plans:**
-- Review after each batch (3 tasks)
-- Get feedback, apply, continue
 
 **Ad-Hoc Development:**
 - Review before merge
@@ -110,4 +107,4 @@ You: [Fix progress indicators, extract constant]
 **If reviewer wrong:**
 - Push back with technical reasoning
 - Show code/tests that prove it works
-- Request clarification
+- Resume it and request clarification

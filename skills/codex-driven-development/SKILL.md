@@ -73,13 +73,15 @@ digraph process {
     "Review passed?" -> "Resume tdd session with fix instructions" [label="no"];
     "Resume tdd session with fix instructions" -> "Re-review (max 3 attempts)";
     "Re-review (max 3 attempts)" -> "Mark task completed, update taskBaseSha" [label="passed"];
-    "Re-review (max 3 attempts)" -> "Escalate to human" [label="3 failures"];
+    "Re-review (max 3 attempts)" -> "Escalate to human or you decide for yourself." [label="3 failures"];
     "Mark task completed, update taskBaseSha" -> "More tasks?";
     "More tasks?" -> "Mark task in_progress" [label="yes"];
     "More tasks?" -> "Final review: review tool (planBaseSha to HEAD, full mode)" [label="no"];
     "Final review: review tool (planBaseSha to HEAD, full mode)" -> "Use superpowers:finishing-a-development-branch";
 }
 ```
+
+When the attempt count has already reached three times, you need to perform Escalate, but at this time, your human partner may not be around. Please read CLAUDE.md for additional information on this.
 
 ## Example Workflow
 
@@ -183,7 +185,7 @@ Done!
 - Start implementation on main/master branch without explicit user consent
 - Skip review after tdd (every task needs review)
 - Use `exec` instead of `tdd` for implementation (bypasses TDD discipline)
-- Proceed with unfixed Critical or Important issues
+- Proceed with unfixed Critical or Important issues (unless you have a strong reason to refute the review)
 - Dispatch multiple tdd calls in parallel (file conflicts)
 - Skip the final full-range review
 - Ignore tdd tool errors — check `health` first
@@ -194,9 +196,9 @@ Done!
 - Resume the tdd session with specific fix instructions
 - Re-review after fix
 - Repeat until approved or 3 attempts exhausted
-- 3 failures → stop, escalate to human
+- 3 failures → stop, view CLAUDE.md to get instructions. If there are no related instructions, escalate to human.
 
-**If tdd tool fails:**
+**If any tool fails:**
 - Call `health` to verify environment
 - Check error message for guidance
 - Don't retry blindly — diagnose first

@@ -96,21 +96,23 @@ git commit -m "feat: add specific feature"
 
 ## Execution Handoff
 
-After saving the plan, offer execution choice:
+After saving the plan, ask whether the plan should begin execution:
 
-**"Plan complete and saved to `docs/plans/<filename>.md`. Two execution options:**
+**"Plan complete and saved to `docs/plans/<filename>.md`. 我们应当使用codex-driven-development来执行计划吗？**
 
 **1. Codex-Driven (this session)** - Uses mcp-codex-dev tdd tool per task, review after each, fast iteration
 
-**2. Parallel Session (separate)** - Open new session with executing-plans, batch execution with checkpoints
+**2. Codex-Driven (after compact)** - Because the context may be running low, compression needs to be performed first before executing the plan using mcp-codex-dev
+
+**3. Other (other Instructions)** - users may have other instructions, such as temporarily modifying the plan
 
 **Which approach?"**
 
-**If Codex-Driven chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:codex-driven-development
+**If Codex-Driven (this session) chosen:**
+- **REQUIRED SUB-SKILL:** Use copowers:codex-driven-development
 - Stay in this session
-- Codex TDD per task + full review
+- Codex TDD per task + full review loop in a git-worktree
 
-**If Parallel Session chosen:**
-- Guide them to open new session in worktree
-- **REQUIRED SUB-SKILL:** New session uses superpowers:executing-plans
+**If Codex-Driven (after compact)** chosen:**
+- Emphasize the subsequent workflow and required skills, compress the context window.
+- **REQUIRED SUB-SKILL:** Use copowers:codex-driven-development after compact
