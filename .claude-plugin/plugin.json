@@ -1,7 +1,7 @@
 {
   "name": "copowers",
   "description": "AI development workflow with mcp-codex-dev: TDD, code review, collaboration patterns",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "MIT",
   "keywords": ["skills", "tdd", "mcp-codex-dev", "code-review", "collaboration", "workflows"]
 }
